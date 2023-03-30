@@ -1,0 +1,22 @@
+{
+  "MQTT": {
+    "CLIENT_ID": "my-client",
+    "BROKER": "my.broker.com",
+    "USERNAME": "***",
+    "PASSWORD": "***",
+    "TOPIC": ""
+  },
+  "DATABASE": {
+    "HOST": "",
+    "USERNAME": "",
+    "PASSWORD": "",
+    "SCHEMA":  "test_db",
+    "TABLE": "sensor_data",
+    "WRITE_FREQUENCY_SECONDS": 1,
+    "LOG_LEVEL": "INFO"
+  },
+  "CSV": {
+    "OUTPUT_FILE": "data.csv",
+    "LOG_LEVEL": "INFO"
+  }
+}
