@@ -5,9 +5,11 @@
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
 
+#define TEMPERATURE_OFFSET -1.0
+
 #define SENSOR_READINGS_OVERSAMPLING_COUNT 10      // The average of 10 samples will be the resulting sensor reading.
 #define SENSOR_READINGS_OVERSAMPLING_DELAY_MS 600  // The amount of milliseconds to wait between each sensor reading.
-// Beacuse of the delay when reading the sensors, 10 samples and waiting 600ms each time will end up approx. as a 10 second delay in total.
+// Because of the delay when reading the sensors, 10 samples and waiting 600ms each time will end up approx. as a 10 second delay in total.
 
 
 /**
@@ -22,6 +24,10 @@
 * - float gasResistance (KOhm)
 *
 * - float lightIntensity (%)
+*
+* - unsigned long timestamp (unix time in seconds)
+*
+* - unsigned long sequence
 */
 struct SensorReadings {
   float temperature;
@@ -32,8 +38,6 @@ struct SensorReadings {
   unsigned long timestamp;
   unsigned long sequence;
 };
-
-SensorReadings sensorReadingsOversamplingBuffer[SENSOR_READINGS_OVERSAMPLING_COUNT];
 
 /**
 * Initializing BME sensor.
@@ -59,6 +63,8 @@ bool initSensor(Adafruit_BME680* bmeSensor) {
   return true;
 }
 
+SensorReadings sensorReadingsOversamplingBuffer[SENSOR_READINGS_OVERSAMPLING_COUNT];
+
 /*
 * Reads oversampled sensor values into out_sensorReadings.
 * Returns true on success and false if the reading fails.
@@ -77,7 +83,7 @@ bool readSensorsOversampled(SensorReadings* out_sensorReadings, unsigned long se
   for (int i = 0; i < SENSOR_READINGS_OVERSAMPLING_COUNT; ++i) {
     if (!bmeSensor->performReading()) {
 #ifdef DEBUG
-      Serial.print("Error while reading sensors!");
+      Serial.println("Error while reading sensors!");
 #endif
       return initSensor(bmeSensor);
     }
@@ -85,7 +91,7 @@ bool readSensorsOversampled(SensorReadings* out_sensorReadings, unsigned long se
     int lightSensorAnalogReading = analogRead(lightSensorPin);
 
     sensorReadingsOversamplingBuffer[i] = {
-      temperature: bmeSensor->temperature,                        // °C
+      temperature: bmeSensor->temperature + TEMPERATURE_OFFSET,   // °C
       pressure: bmeSensor->pressure / 100.0,                      // hPa
       humidity: bmeSensor->humidity,                              // percentage
       gasResistance: bmeSensor->gas_resistance / 1000.0,          // KOhm

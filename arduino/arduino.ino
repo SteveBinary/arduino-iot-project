@@ -8,7 +8,6 @@
 #include "wifi.hpp"
 #include "mqtt.hpp"
 
-#define WIFI_HOST_NAME "Arduino IoT Sensor"
 #define LIGHT_SENSOR_PIN A6
 #define SENSOR_READINGS_BUFFER_SIZE 500
 
@@ -47,7 +46,7 @@ void setup() {
   }
 
   WiFi.noLowPowerMode();
-  WiFi.setHostname(WIFI_HOST_NAME);
+  WiFi.setHostname(WIFI_HOSTNAME);
 
   mqttClient.setCleanSession(true);
   mqttClient.setId(MQTT_CLIENT_ID);
