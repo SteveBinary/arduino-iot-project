@@ -6,7 +6,7 @@ import mysql
 from mysql.connector import connect as connect_to_mysql_db, MySQLConnection, CMySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 
-from python.common.sensor_data import SensorData
+from common.sensor_data import SensorData
 
 
 def sql_statement_create_table_if_not_exists(schema: str, table: str) -> str:
